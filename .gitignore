@@ -1,4 +1,4 @@
 images
 __pycache__
 *.log 
-test*
+test*.py
