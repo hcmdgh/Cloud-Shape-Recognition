@@ -61,7 +61,7 @@ class ImageDataset(Dataset):
         
         self.data_arr = data_arr 
         
-    def __getitem__(self, index: int) -> tuple[Tensor, int]:
+    def __getitem__(self, index: int) -> Tuple[Tensor, int]:
         path, label = self.data_arr[index]
         
         img = cv2.imread(path, cv2.IMREAD_COLOR)
