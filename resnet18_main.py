@@ -61,13 +61,14 @@ model=models.resnet18(pretrained=True)
 model.fc=nn.Linear(model.fc.in_features,28)
 #输出与数据集类别对应，为28
 #由于数据集中标签从1开始，但pytorch默认从0开始
-#因此在数据读入中将label改成label-1了，预测结果写成csv时需要label+1
+#因此我在dataset.py中将label改成label-1了，也就是data_list.append((path, label-1))，之后将预测结果写成csv时需要label+1
+#也可以不改label，那就要将28改为29，否则会报错
 optimizer = optim.Adam(model.fc.parameters())
 
 model = model.to(device)
 criterion = nn.CrossEntropyLoss()#交叉熵损失函数
 
-EPOCHS=20
+EPOCHS=20 #每个EPOCH大概要运行六七分钟
 
 def train_one_batch(images,labels):
     '''运行一个batch的训练，返回当前batch的训练日志'''
@@ -179,6 +180,7 @@ if __name__ == '__main__':
         df_test_log = df_test_log.append(log_test, ignore_index=True)
         
         # 保存最新的最佳模型文件
+        # 把f1分数作为文件名了，比较直观
         if log_test['test_f1-score'] > best_test_f1: 
             # 删除旧的最佳模型文件(如有)
             old_best_checkpoint_path = './model/checkpoints/best-{:.3f}.pth'.format(best_test_f1)
